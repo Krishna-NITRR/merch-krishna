@@ -366,6 +366,37 @@ h2 {
   margin: 0 auto;
 }
 
+/* ══════════════════════════════════════════
+   PREMIUM SAAS GRADIENT HIGHLIGHTS
+══════════════════════════════════════════ */
+.letter-jiggle {
+  display: inline-block;
+  transition: color 0.4s ease;
+  background-image: linear-gradient(135deg, #017AFF, #6A5BFF, #A855F7);
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: inherit;
+  cursor: default;
+}
+
+.letter-jiggle.is-jiggling {
+  color: transparent;
+  animation: gradient-flow 4s ease infinite alternate, jiggle-sideways 0.4s ease-in-out infinite alternate;
+}
+
+@keyframes jiggle-sideways {
+  0% { transform: translateX(0px); }
+  25% { transform: translateX(-1.5px); }
+  75% { transform: translateX(1.5px); }
+  100% { transform: translateX(0px); }
+}
+
+@keyframes gradient-flow {
+  0% { background-position: 0% center; }
+  100% { background-position: 100% center; }
+}
+
 /* Utilities */
 .mb-8 { margin-bottom: 32px; }
 .mt-8 { margin-top: 32px; }

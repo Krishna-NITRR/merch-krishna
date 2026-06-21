@@ -1,15 +1,38 @@
+import { useState } from 'react';
 import type { ViewState } from '../App';
 
 interface Props {
   onNavigate: (view: ViewState) => void;
 }
 
+const Letter = ({ children }: { children: React.ReactNode }) => {
+  const [jiggling, setJiggling] = useState(false);
+  
+  const handleHover = () => {
+    if (!jiggling) {
+      setJiggling(true);
+      setTimeout(() => setJiggling(false), 2000);
+    }
+  };
+
+  return (
+    <span 
+      className={`letter-jiggle ${jiggling ? 'is-jiggling' : ''}`} 
+      onMouseEnter={handleHover}
+    >
+      {children}
+    </span>
+  );
+};
+
 export default function HomeView({ onNavigate }: Props) {
   return (
     <>
       <section className="hero-section">
         <div className="hero-inner">
-          <h1>Wear What You've Built</h1>
+          <h1>
+            {"Wear What You've Built".split('').map((char, i) => char === ' ' ? ' ' : <Letter key={`t1-${i}`}>{char}</Letter>)}
+          </h1>
           <p className="subtext" style={{ margin: '0 auto 48px auto' }}>
             Merch for students building, publishing, and proving themselves
           </p>
