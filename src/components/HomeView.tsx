@@ -7,16 +7,18 @@ interface Props {
 export default function HomeView({ onNavigate }: Props) {
   return (
     <>
-      <section className="text-center" style={{ maxWidth: '800px', margin: '0 auto' }}>
-        <h1>Wear What You've Built</h1>
-        <p className="subtext" style={{ margin: '0 auto 48px auto' }}>
-          Merch for students building, publishing, and proving themselves
-        </p>
-        <button className="btn btn-primary" onClick={() => {
-          document.getElementById('products')?.scrollIntoView({ behavior: 'smooth' });
-        }}>
-          Choose Your Product
-        </button>
+      <section className="hero-section">
+        <div className="hero-inner">
+          <h1>Wear What You've Built</h1>
+          <p className="subtext" style={{ margin: '0 auto 48px auto' }}>
+            Merch for students building, publishing, and proving themselves
+          </p>
+          <button className="btn btn-primary" onClick={() => {
+            document.getElementById('products')?.scrollIntoView({ behavior: 'smooth' });
+          }}>
+            Choose Your Product
+          </button>
+        </div>
       </section>
 
       <section id="products" className="products-grid">
@@ -35,7 +37,7 @@ export default function HomeView({ onNavigate }: Props) {
           </div>
           <h2 className="product-title">Research Publish Merch</h2>
           <p className="product-desc">"build before you speak" on the back. research &gt; publish on the front.</p>
-          <button className="btn btn-secondary btn-full" style={{ background: 'var(--primary)', color: 'var(--primary-text)', borderColor: 'var(--primary)' }}>Buy Now</button>
+          <button className="btn btn-primary btn-full">Buy Now</button>
         </div>
       </section>
     </>

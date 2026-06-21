@@ -11,7 +11,7 @@ export default function CartView({ cart, onNavigate }: Props) {
       <h2>Your Cart</h2>
       
       {cart.length === 0 ? (
-        <div className="mt-8 text-center" style={{ padding: '48px 0', border: '1px dashed var(--border)', borderRadius: 'var(--radius-lg)' }}>
+        <div className="mt-8 text-center" style={{ padding: '48px 0', border: '1px dashed var(--div)', borderRadius: 'var(--radius-lg)' }}>
           <p className="subtext" style={{ margin: '0 auto 24px auto' }}>Your cart is empty.</p>
           <button className="btn btn-primary" onClick={() => onNavigate('home')}>Browse Products</button>
         </div>

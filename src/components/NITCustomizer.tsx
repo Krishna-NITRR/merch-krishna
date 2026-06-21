@@ -38,12 +38,12 @@ export default function NITCustomizer({ onAddToCart }: Props) {
           
           <div className="preview-text" style={{ fontSize: view === 'front' ? '3rem' : '2rem' }}>
             {view === 'front' ? (
-              <div style={{ color: '#000' }}>nit.</div>
+              <div style={{ color: 'var(--text)' }}>nit.</div>
             ) : (
               <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
                 <div style={{ fontSize: '1.5rem', textTransform: 'uppercase', letterSpacing: '0.05em' }}>{nitName}</div>
                 <div style={{ fontSize: '2.5rem' }}>{userName || 'YOUR NAME'}</div>
-                {batch && <div style={{ fontSize: '1.25rem', color: 'var(--text-muted)' }}>Class of {batch}</div>}
+                {batch && <div style={{ fontSize: '1.25rem', color: 'var(--tm)' }}>Class of {batch}</div>}
               </div>
             )}
           </div>

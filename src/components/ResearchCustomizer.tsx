@@ -30,13 +30,13 @@ export default function ResearchCustomizer({ onAddToCart }: Props) {
           <div className="preview-text">
             {view === 'front' ? (
               <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-                <div style={{ fontSize: '2.5rem', color: '#000', letterSpacing: '-0.04em' }}>
+                <div style={{ fontSize: '2.5rem', color: 'var(--text)', letterSpacing: '-0.04em' }}>
                   research &gt; publish
                 </div>
-                {userName && <div style={{ fontSize: '1rem', fontWeight: 500, color: 'var(--text-muted)' }}>{userName}</div>}
+                {userName && <div style={{ fontSize: '1rem', fontWeight: 500, color: 'var(--tm)' }}>{userName}</div>}
               </div>
             ) : (
-              <div style={{ fontSize: '1.5rem', color: '#000', letterSpacing: '0.02em', fontWeight: 600 }}>
+              <div style={{ fontSize: '1.5rem', color: 'var(--text)', letterSpacing: '0.02em', fontWeight: 600 }}>
                 build before you speak.
               </div>
             )}
