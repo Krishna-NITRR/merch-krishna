@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import type { ViewState } from '../App';
+import TShirtMockup from './TShirtMockup';
 
 interface Props {
   onNavigate: (view: ViewState) => void;
@@ -55,11 +56,11 @@ export default function HomeView({ onNavigate }: Props) {
         </div>
 
         <div className="product-card" onClick={() => onNavigate('customize-research')}>
-          <div className="product-image-placeholder">
-            [ Research &gt; Publish T-Shirt Mockup ]
+          <div className="product-image-placeholder" style={{ padding: 0, background: 'transparent', border: 'none' }}>
+            <TShirtMockup view="front" />
           </div>
           <h2 className="product-title">Research Publish Merch</h2>
-          <p className="product-desc">"build before you speak" on the back. research &gt; publish on the front.</p>
+          <p className="product-desc">"Evidence over assumptions" on the back. THINK RESEARCH PUBLISH on the front.</p>
           <button className="btn btn-primary btn-full">Buy Now</button>
         </div>
       </section>

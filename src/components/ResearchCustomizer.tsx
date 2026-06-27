@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import type { CartItem } from '../App';
+import TShirtMockup from './TShirtMockup';
 
 interface Props {
   onAddToCart: (item: CartItem) => void;
@@ -27,19 +28,8 @@ export default function ResearchCustomizer({ onAddToCart }: Props) {
             Switch to {view === 'front' ? 'Back' : 'Front'}
           </button>
           
-          <div className="preview-text">
-            {view === 'front' ? (
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-                <div style={{ fontSize: '2.5rem', color: 'var(--text)', letterSpacing: '-0.04em' }}>
-                  research &gt; publish
-                </div>
-                {userName && <div style={{ fontSize: '1rem', fontWeight: 500, color: 'var(--tm)' }}>{userName}</div>}
-              </div>
-            ) : (
-              <div style={{ fontSize: '1.5rem', color: 'var(--text)', letterSpacing: '0.02em', fontWeight: 600 }}>
-                build before you speak.
-              </div>
-            )}
+          <div className="preview-text" style={{ padding: 0, background: 'transparent' }}>
+            <TShirtMockup view={view} userName={userName} />
           </div>
         </div>
       </div>
