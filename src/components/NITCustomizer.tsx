@@ -84,6 +84,10 @@ export default function NITCustomizer({ onAddToCart }: Props) {
           />
         </div>
 
+        <div style={{ marginTop: '24px', fontSize: '0.8rem', color: 'var(--tm)', borderTop: '1px solid var(--div)', paddingTop: '16px', paddingBottom: '16px', lineHeight: '1.5' }}>
+          <strong>Want more customization?</strong> Explain your customization request by contacting <a href="mailto:admin@krishnamahawar.in" style={{ color: 'var(--purple)' }}>admin@krishnamahawar.in</a>. Please note that additional charges may apply as per the request.
+        </div>
+
         <button className="btn btn-primary btn-full mt-4" onClick={handleAdd}>
           Add to Cart
         </button>
