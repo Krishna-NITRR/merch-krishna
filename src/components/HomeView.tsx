@@ -50,18 +50,24 @@ export default function HomeView({ onNavigate }: Props) {
           <div className="product-image-placeholder">
             [ NIT Identity Hoodie Mockup ]
           </div>
-          <h2 className="product-title">NIT Identity Merch</h2>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginTop: '16px', marginBottom: '8px' }}>
+            <h2 className="product-title" style={{ margin: 0 }}>NIT Identity Merch</h2>
+            <span style={{ fontSize: '1.25rem', fontWeight: 700, color: '#a085ff' }}>₹499</span>
+          </div>
           <p className="product-desc">Customizable hoodie featuring your NIT, your name, and your batch year.</p>
-          <button className="btn btn-secondary btn-full">Customize</button>
+          <button className="btn btn-secondary btn-full">Customize Hoodie &rarr;</button>
         </div>
 
         <div className="product-card" onClick={() => onNavigate('customize-research')}>
           <div className="product-image-placeholder" style={{ padding: 0, background: 'transparent', border: 'none' }}>
             <TShirtMockup view="front" />
           </div>
-          <h2 className="product-title">Research Publish Merch</h2>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginTop: '16px', marginBottom: '8px' }}>
+            <h2 className="product-title" style={{ margin: 0 }}>Research Publish Merch</h2>
+            <span style={{ fontSize: '1.25rem', fontWeight: 700, color: '#a085ff' }}>₹699</span>
+          </div>
           <p className="product-desc">"Evidence over assumptions" on the back. THINK RESEARCH PUBLISH on the front.</p>
-          <button className="btn btn-primary btn-full">Buy Now</button>
+          <button className="btn btn-primary btn-full">Buy T-Shirt &rarr;</button>
         </div>
       </section>
     </>

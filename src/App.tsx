@@ -11,6 +11,8 @@ export interface CartItem {
   id: string;
   type: 'nit' | 'research';
   title: string;
+  price: number;
+  size: string;
   quantity: number;
   details: {
     nitName?: string;
@@ -24,8 +26,41 @@ function App() {
   const [cart, setCart] = useState<CartItem[]>([]);
 
   const addToCart = (item: CartItem) => {
-    setCart([...cart, item]);
+    setCart(prev => {
+      // Check if identical item already exists
+      const existingIdx = prev.findIndex(
+        i => i.type === item.type &&
+             i.size === item.size &&
+             i.details.nitName === item.details.nitName &&
+             i.details.userName === item.details.userName &&
+             i.details.batch === item.details.batch
+      );
+      if (existingIdx > -1) {
+        const next = [...prev];
+        next[existingIdx].quantity += item.quantity;
+        return next;
+      }
+      return [...prev, item];
+    });
     setActiveView('cart');
+  };
+
+  const updateQuantity = (id: string, delta: number) => {
+    setCart(prev => prev.map(item => {
+      if (item.id === id) {
+        const newQty = item.quantity + delta;
+        return newQty > 0 ? { ...item, quantity: newQty } : null;
+      }
+      return item;
+    }).filter(Boolean) as CartItem[]);
+  };
+
+  const removeFromCart = (id: string) => {
+    setCart(prev => prev.filter(item => item.id !== id));
+  };
+
+  const clearCart = () => {
+    setCart([]);
   };
 
   const cartCount = cart.reduce((acc, item) => acc + item.quantity, 0);
@@ -53,7 +88,15 @@ function App() {
         {activeView === 'home' && <HomeView onNavigate={setActiveView} />}
         {activeView === 'customize-nit' && <NITCustomizer onAddToCart={addToCart} />}
         {activeView === 'customize-research' && <ResearchCustomizer onAddToCart={addToCart} />}
-        {activeView === 'cart' && <CartView cart={cart} onNavigate={setActiveView} />}
+        {activeView === 'cart' && (
+          <CartView 
+            cart={cart} 
+            onNavigate={setActiveView}
+            onUpdateQuantity={updateQuantity}
+            onRemoveItem={removeFromCart}
+            onClearCart={clearCart}
+          />
+        )}
       </main>
     </>
   );

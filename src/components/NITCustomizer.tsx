@@ -12,17 +12,22 @@ const NIT_OPTIONS = [
   "NIT Jalandhar", "NIT Jamshedpur", "NIT Patna", "NIT Goa", "NIT Hamirpur"
 ];
 
+const SIZES = ['S', 'M', 'L', 'XL', 'XXL'];
+
 export default function NITCustomizer({ onAddToCart }: Props) {
   const [view, setView] = useState<'front' | 'back'>('front');
   const [nitName, setNitName] = useState(NIT_OPTIONS[0]);
   const [userName, setUserName] = useState('');
   const [batch, setBatch] = useState('');
+  const [size, setSize] = useState('L');
 
   const handleAdd = () => {
     onAddToCart({
       id: Date.now().toString(),
       type: 'nit',
       title: 'NIT Identity Hoodie',
+      price: 499,
+      size,
       quantity: 1,
       details: { nitName, userName, batch }
     });
@@ -51,13 +56,49 @@ export default function NITCustomizer({ onAddToCart }: Props) {
       </div>
 
       <div className="form-col">
-        <h2 className="mb-8">Customize Your NIT Merch</h2>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '24px' }}>
+          <div>
+            <h2 style={{ margin: 0, fontSize: '1.6rem' }}>Customize Your NIT Hoodie</h2>
+            <p style={{ color: 'var(--tm)', fontSize: '0.9rem', margin: '4px 0 0' }}>Heavyweight 380 GSM fleece · Premium embroidery</p>
+          </div>
+          <div style={{ textAlign: 'right' }}>
+            <div style={{ fontSize: '1.6rem', fontWeight: 800, color: '#a085ff' }}>₹499</div>
+            <div style={{ fontSize: '0.75rem', color: '#4ade80', fontWeight: 600 }}>Free India Shipping</div>
+          </div>
+        </div>
         
         <div className="form-group">
           <label className="form-label">Select your NIT</label>
           <select className="form-select" value={nitName} onChange={e => setNitName(e.target.value)}>
             {NIT_OPTIONS.map(nit => <option key={nit} value={nit}>{nit}</option>)}
           </select>
+        </div>
+
+        <div className="form-group">
+          <label className="form-label">Select Size</label>
+          <div style={{ display: 'flex', gap: '8px' }}>
+            {SIZES.map(s => (
+              <button
+                key={s}
+                type="button"
+                onClick={() => setSize(s)}
+                style={{
+                  flex: 1,
+                  padding: '10px 0',
+                  borderRadius: 'var(--radius)',
+                  border: size === s ? '2px solid #6C4CF1' : '1px solid var(--div)',
+                  background: size === s ? 'rgba(108,76,241,0.2)' : 'var(--bg3)',
+                  color: size === s ? '#fff' : 'var(--tm)',
+                  fontWeight: 600,
+                  fontSize: '0.95rem',
+                  cursor: 'pointer',
+                  transition: 'all 0.2s'
+                }}
+              >
+                {s}
+              </button>
+            ))}
+          </div>
         </div>
 
         <div className="form-group">
@@ -84,12 +125,12 @@ export default function NITCustomizer({ onAddToCart }: Props) {
           />
         </div>
 
-        <div style={{ marginTop: '24px', fontSize: '0.8rem', color: 'var(--tm)', borderTop: '1px solid var(--div)', paddingTop: '16px', paddingBottom: '16px', lineHeight: '1.5' }}>
-          <strong>Want more customization?</strong> Explain your customization request by contacting <a href="mailto:admin@krishnamahawar.in" style={{ color: 'var(--purple)' }}>admin@krishnamahawar.in</a>. Please note that additional charges may apply as per the request.
+        <div style={{ marginTop: '20px', fontSize: '0.8rem', color: 'var(--tm)', borderTop: '1px solid var(--div)', paddingTop: '16px', paddingBottom: '16px', lineHeight: '1.5' }}>
+          <strong>Want custom lab/dept details?</strong> Email <a href="mailto:admin@krishnamahawar.in" style={{ color: 'var(--p2)' }}>admin@krishnamahawar.in</a>.
         </div>
 
-        <button className="btn btn-primary btn-full mt-4" onClick={handleAdd}>
-          Add to Cart
+        <button className="btn btn-primary btn-full mt-2" onClick={handleAdd}>
+          Add to Cart — ₹499
         </button>
       </div>
     </div>

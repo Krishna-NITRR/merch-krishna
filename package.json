@@ -10,7 +10,11 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@supabase/supabase-js": "^2.117.3",
+    "@vercel/node": "^23.0.1",
+    "dotenv": "^18.0.7",
     "lucide-react": "^1.21.0",
+    "razorpay": "^2.9.8",
     "react": "^19.2.6",
     "react-dom": "^19.2.6"
   },
