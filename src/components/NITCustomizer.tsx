@@ -130,7 +130,7 @@ export default function NITCustomizer({ onAddToCart }: Props) {
         </div>
 
         <button className="btn btn-primary btn-full mt-2" onClick={handleAdd}>
-          Add to Cart — ₹499
+          Add to Cart · ₹499
         </button>
       </div>
     </div>

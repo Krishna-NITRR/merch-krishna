@@ -534,7 +534,7 @@ export default function CartView({ cart, onNavigate, onUpdateQuantity, onRemoveI
               {/* Referral code input */}
               <div style={{ marginBottom: '16px' }}>
                 <label style={{ display: 'block', fontSize: '0.8rem', fontWeight: 600, color: 'var(--tm)', marginBottom: '6px' }}>
-                  Referral Code (optional — 10% off)
+                  Referral Code (optional, get 10% off)
                 </label>
                 <div style={{ display: 'flex', gap: '8px' }}>
                   <input
@@ -576,7 +576,7 @@ export default function CartView({ cart, onNavigate, onUpdateQuantity, onRemoveI
                 </div>
                 {refStatus === 'valid' && (
                   <div style={{ marginTop: '6px', color: '#4ade80', fontSize: '0.8rem', fontWeight: 600 }}>
-                    ✓ Code applied{refReferrer ? ` — referred by ${refReferrer}` : ''}. 10% off!
+                    ✓ Code applied{refReferrer ? `. Referred by ${refReferrer}` : ''}. 10% off!
                   </div>
                 )}
                 {refStatus === 'invalid' && (

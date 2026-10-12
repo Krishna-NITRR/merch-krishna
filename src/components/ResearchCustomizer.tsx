@@ -97,7 +97,7 @@ export default function ResearchCustomizer({ onAddToCart }: Props) {
         </div>
 
         <button className="btn btn-primary btn-full mt-2" onClick={handleAdd}>
-          Add to Cart — ₹699
+          Add to Cart · ₹699
         </button>
       </div>
     </div>
