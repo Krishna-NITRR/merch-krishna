@@ -1,4 +1,10 @@
 {
+  "functions": {
+    "api/create-order.ts": { "maxDuration": 10 },
+    "api/verify-payment.ts": { "maxDuration": 10 },
+    "api/referral-validate.ts": { "maxDuration": 10 },
+    "api/referral-apply.ts": { "maxDuration": 10 }
+  },
   "rewrites": [
     { "source": "/api/(.*)", "destination": "/api/$1" },
     { "source": "/(.*)", "destination": "/index.html" }

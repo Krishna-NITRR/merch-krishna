@@ -7,13 +7,15 @@ const PRODUCT_PRICES: Record<string, number> = {
   research: 699,   // ₹699
 };
 
+const REFERRAL_DISCOUNT = 0.10; // 10% off with valid code
+
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   if (req.method !== 'POST') {
     return res.status(405).json({ error: 'Method Not Allowed' });
   }
 
   try {
-    const { items, customer } = req.body;
+    const { items, customer, referralCode } = req.body;
 
     if (!items || !Array.isArray(items) || items.length === 0) {
       return res.status(400).json({ error: 'Cart is empty' });
@@ -38,6 +40,39 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       if (item.details?.batch) desc += `, Batch: ${item.details.batch}`;
       desc += `) x${qty}`;
       itemSummaries.push(desc);
+    }
+
+    // Validate referral code server-side (non-blocking)
+    let discountApplied = false;
+    if (referralCode && typeof referralCode === 'string') {
+      const supabaseUrl = process.env.VITE_SUPABASE_URL;
+      const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+      if (supabaseUrl && supabaseKey) {
+        try {
+          const supabase = createClient(supabaseUrl, supabaseKey);
+          const code = referralCode.trim().toUpperCase();
+          const { data: codeRow } = await supabase
+            .from('referral_codes')
+            .select('*, referrers!inner(status)')
+            .eq('code', code)
+            .single();
+          const referrer = codeRow?.referrers as { status: string } | undefined;
+          const now = new Date();
+          const isActive =
+            codeRow &&
+            codeRow.status === 'active' &&
+            referrer?.status === 'approved' &&
+            (!codeRow.valid_until || new Date(codeRow.valid_until) > now) &&
+            (codeRow.max_uses == null || codeRow.uses_count < codeRow.max_uses);
+          if (isActive) discountApplied = true;
+        } catch (refErr) {
+          console.warn('Referral validation non-blocking error:', refErr);
+        }
+      }
+    }
+
+    if (discountApplied) {
+      totalInRupees = Math.round(totalInRupees * (1 - REFERRAL_DISCOUNT));
     }
 
     const amountInPaise = totalInRupees * 100;
@@ -67,7 +102,8 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         customerEmail: customer.email,
         customerPhone: customer.phone,
         shippingAddress: `${customer.address}, ${customer.city || ''}, ${customer.state || ''} - ${customer.pincode}`,
-        summary: itemSummaries.slice(0, 3).join('; ')
+        summary: itemSummaries.slice(0, 3).join('; '),
+        ...(discountApplied ? { referralCode: referralCode.trim().toUpperCase(), discount: '10%' } : {})
       }
     });
 
@@ -93,7 +129,8 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
           amount_minor: amountInPaise,
           currency: 'INR',
           payment_status: 'order_created',
-          order_status: 'processing'
+          order_status: 'processing',
+          ...(discountApplied ? { referral_code: referralCode.trim().toUpperCase() } : {})
         }]);
 
         // Also track lead
@@ -112,7 +149,8 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       receipt,
       amount: amountInPaise,
       currency: 'INR',
-      keyId: razorpayKeyId
+      keyId: razorpayKeyId,
+      discountApplied
     });
 
   } catch (error: any) {

@@ -34,6 +34,8 @@ interface ConfirmedOrder {
   items: CartItem[];
 }
 
+const REFERRAL_DISCOUNT = 0.10;
+
 export default function CartView({ cart, onNavigate, onUpdateQuantity, onRemoveItem, onClearCart }: Props) {
   const [customer, setCustomer] = useState<CustomerDetails>({
     name: '',
@@ -49,7 +51,33 @@ export default function CartView({ cart, onNavigate, onUpdateQuantity, onRemoveI
   const [error, setError] = useState<string | null>(null);
   const [confirmedOrder, setConfirmedOrder] = useState<ConfirmedOrder | null>(null);
 
+  // Referral code state
+  const [refCode, setRefCode] = useState('');
+  const [refStatus, setRefStatus] = useState<'idle' | 'checking' | 'valid' | 'invalid'>('idle');
+  const [refReferrer, setRefReferrer] = useState<string | null>(null);
+
   const subtotal = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
+  const discount = refStatus === 'valid' ? Math.round(subtotal * REFERRAL_DISCOUNT) : 0;
+  const total = subtotal - discount;
+
+  const handleApplyRef = async () => {
+    const code = refCode.trim().toUpperCase();
+    if (!code) return;
+    setRefStatus('checking');
+    setRefReferrer(null);
+    try {
+      const res = await fetch(`/api/referral-validate?code=${encodeURIComponent(code)}`);
+      const data = await res.json();
+      if (data.success && data.data?.valid) {
+        setRefStatus('valid');
+        setRefReferrer(data.data.referrer?.name || null);
+      } else {
+        setRefStatus('invalid');
+      }
+    } catch {
+      setRefStatus('invalid');
+    }
+  };
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -100,7 +128,8 @@ export default function CartView({ cart, onNavigate, onUpdateQuantity, onRemoveI
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           items: cart,
-          customer
+          customer,
+          ...(refStatus === 'valid' ? { referralCode: refCode.trim().toUpperCase() } : {})
         })
       });
 
@@ -148,7 +177,7 @@ export default function CartView({ cart, onNavigate, onUpdateQuantity, onRemoveI
               setConfirmedOrder({
                 receipt: orderData.receipt,
                 paymentId: response.razorpay_payment_id,
-                amount: subtotal,
+                amount: total,
                 customer: { ...customer },
                 items: [...cart]
               });
@@ -366,6 +395,12 @@ export default function CartView({ cart, onNavigate, onUpdateQuantity, onRemoveI
                 <span>Subtotal</span>
                 <span>₹{subtotal.toLocaleString()}</span>
               </div>
+              {discount > 0 && (
+                <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '8px', color: '#4ade80' }}>
+                  <span style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>🎟 Referral Discount (10%)</span>
+                  <span>-₹{discount.toLocaleString()}</span>
+                </div>
+              )}
               <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '12px', color: 'var(--tm)' }}>
                 <span style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
                   <Truck size={16} color="#4ade80" /> Express Shipping across India
@@ -374,7 +409,7 @@ export default function CartView({ cart, onNavigate, onUpdateQuantity, onRemoveI
               </div>
               <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '1.3rem', fontWeight: 800, color: '#a085ff', borderTop: '1px solid var(--div)', paddingTop: '12px' }}>
                 <span>Total to Pay</span>
-                <span>₹{subtotal.toLocaleString()}</span>
+                <span>₹{total.toLocaleString()}</span>
               </div>
             </div>
           </div>
@@ -495,6 +530,60 @@ export default function CartView({ cart, onNavigate, onUpdateQuantity, onRemoveI
             </div>
 
             <div style={{ borderTop: '1px solid var(--div)', marginTop: '8px', paddingTop: '16px' }}>
+
+              {/* Referral code input */}
+              <div style={{ marginBottom: '16px' }}>
+                <label style={{ display: 'block', fontSize: '0.8rem', fontWeight: 600, color: 'var(--tm)', marginBottom: '6px' }}>
+                  Referral Code (optional — 10% off)
+                </label>
+                <div style={{ display: 'flex', gap: '8px' }}>
+                  <input
+                    type="text"
+                    placeholder="e.g. KRISHNA10"
+                    value={refCode}
+                    onChange={e => { setRefCode(e.target.value); setRefStatus('idle'); setRefReferrer(null); }}
+                    disabled={refStatus === 'valid' || loading}
+                    style={{
+                      flex: 1,
+                      padding: '9px 12px',
+                      border: `1.5px solid ${refStatus === 'valid' ? '#4ade80' : refStatus === 'invalid' ? '#ef4444' : 'var(--div)'}`,
+                      borderRadius: 'var(--radius)',
+                      fontSize: '0.9rem',
+                      fontFamily: 'inherit',
+                      background: 'var(--bg3)',
+                      color: 'var(--text)',
+                      outline: 'none'
+                    }}
+                  />
+                  {refStatus !== 'valid' ? (
+                    <button
+                      type="button"
+                      onClick={handleApplyRef}
+                      disabled={!refCode.trim() || refStatus === 'checking' || loading}
+                      style={{ padding: '9px 16px', background: 'var(--p)', color: '#fff', borderRadius: 'var(--radius)', fontWeight: 600, fontSize: '0.85rem', fontFamily: 'inherit', cursor: 'pointer', opacity: refCode.trim() ? 1 : 0.6, whiteSpace: 'nowrap' }}
+                    >
+                      {refStatus === 'checking' ? '...' : 'Apply'}
+                    </button>
+                  ) : (
+                    <button
+                      type="button"
+                      onClick={() => { setRefStatus('idle'); setRefCode(''); setRefReferrer(null); }}
+                      style={{ padding: '9px 12px', background: 'rgba(239,68,68,0.15)', color: '#ef4444', borderRadius: 'var(--radius)', fontWeight: 600, fontSize: '0.8rem', fontFamily: 'inherit', cursor: 'pointer', whiteSpace: 'nowrap' }}
+                    >
+                      Remove
+                    </button>
+                  )}
+                </div>
+                {refStatus === 'valid' && (
+                  <div style={{ marginTop: '6px', color: '#4ade80', fontSize: '0.8rem', fontWeight: 600 }}>
+                    ✓ Code applied{refReferrer ? ` — referred by ${refReferrer}` : ''}. 10% off!
+                  </div>
+                )}
+                {refStatus === 'invalid' && (
+                  <div style={{ marginTop: '6px', color: '#ef4444', fontSize: '0.8rem' }}>✗ Invalid or expired code.</div>
+                )}
+              </div>
+
               <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '16px', color: 'var(--tm)', fontSize: '0.8rem' }}>
                 <ShieldCheck size={16} color="#6C4CF1" />
                 <span>Secured by Razorpay · UPI, Cards, NetBanking, Wallets supported</span>
@@ -508,7 +597,7 @@ export default function CartView({ cart, onNavigate, onUpdateQuantity, onRemoveI
               >
                 {loading ? 'Opening Payment Gateway...' : (
                   <>
-                    Pay ₹{subtotal.toLocaleString()} via Razorpay <ArrowRight size={18} />
+                    Pay ₹{total.toLocaleString()} via Razorpay <ArrowRight size={18} />
                   </>
                 )}
               </button>
