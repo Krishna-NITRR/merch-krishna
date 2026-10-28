@@ -1,0 +1,34 @@
+.merch-3d {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at 50% 40%, rgba(108, 76, 241, 0.14) 0%, transparent 65%);
+}
+
+.merch-3d canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.merch-3d.is-interactive canvas {
+  cursor: grab;
+  touch-action: pan-y;
+}
+
+.merch-3d.is-dragging canvas {
+  cursor: grabbing;
+}
+
+.merch-3d-hint {
+  position: absolute;
+  bottom: 16px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 0.75rem;
+  color: var(--tm);
+  background: rgba(12, 12, 15, 0.7);
+  border: 1px solid var(--div);
+  padding: 4px 12px;
+  border-radius: 20px;
+  pointer-events: none;
+}

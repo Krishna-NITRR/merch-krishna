@@ -580,7 +580,7 @@ export default function CartView({ cart, onNavigate, onUpdateQuantity, onRemoveI
                   </div>
                 )}
                 {refStatus === 'invalid' && (
-                  <div style={{ marginTop: '6px', color: '#ef4444', fontSize: '0.8rem' }}>âœ: Invalid or expired code.</div>
+                  <div style={{ marginTop: '6px', color: '#ef4444', fontSize: '0.8rem' }}>âœ—: Invalid or expired code.</div>
                 )}
               </div>
 

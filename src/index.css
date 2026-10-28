@@ -418,3 +418,38 @@ h2 {
     padding: 60px 16px 56px;
   }
 }
+
+/* 2D / 3D preview switch */
+.view-mode-toggle {
+  position: absolute;
+  top: 16px;
+  left: 16px;
+  z-index: 10;
+  display: flex;
+  background: rgba(12, 12, 15, 0.8);
+  backdrop-filter: blur(10px);
+  border: 1px solid var(--div);
+  border-radius: 20px;
+  padding: 3px;
+}
+
+.view-mode-toggle button {
+  background: transparent;
+  border: none;
+  color: var(--tm);
+  font-size: 0.8rem;
+  font-weight: 600;
+  padding: 5px 14px;
+  border-radius: 16px;
+  transition: all 0.2s;
+}
+
+.view-mode-toggle button.active {
+  background: var(--p);
+  color: #fff;
+}
+
+.merch-3d-fallback {
+  color: var(--tl);
+  font-size: 0.875rem;
+}

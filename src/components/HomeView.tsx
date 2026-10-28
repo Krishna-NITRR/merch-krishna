@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import type { ViewState } from '../App';
-import TShirtMockup from './TShirtMockup';
+import LazyMerch3D from './LazyMerch3D';
 
 interface Props {
   onNavigate: (view: ViewState) => void;
@@ -48,7 +48,7 @@ export default function HomeView({ onNavigate }: Props) {
       <section id="products" className="products-grid">
         <div className="product-card" onClick={() => onNavigate('customize-nit')}>
           <div className="product-image-placeholder">
-            [ NIT Identity Hoodie Mockup ]
+            <LazyMerch3D product="nit" interactive={false} autoRotate />
           </div>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginTop: '16px', marginBottom: '8px' }}>
             <h2 className="product-title" style={{ margin: 0 }}>NIT Identity Merch</h2>
@@ -59,8 +59,8 @@ export default function HomeView({ onNavigate }: Props) {
         </div>
 
         <div className="product-card" onClick={() => onNavigate('customize-research')}>
-          <div className="product-image-placeholder" style={{ padding: 0, background: 'transparent', border: 'none' }}>
-            <TShirtMockup view="front" />
+          <div className="product-image-placeholder">
+            <LazyMerch3D product="research" interactive={false} autoRotate />
           </div>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginTop: '16px', marginBottom: '8px' }}>
             <h2 className="product-title" style={{ margin: 0 }}>Research Publish Merch</h2>

@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import type { CartItem } from '../App';
+import LazyMerch3D from './LazyMerch3D';
 
 interface Props {
   onAddToCart: (item: CartItem) => void;
@@ -16,6 +17,7 @@ const SIZES = ['S', 'M', 'L', 'XL', 'XXL'];
 
 export default function NITCustomizer({ onAddToCart }: Props) {
   const [view, setView] = useState<'front' | 'back'>('front');
+  const [mode, setMode] = useState<'2d' | '3d'>('3d');
   const [nitName, setNitName] = useState(NIT_OPTIONS[0]);
   const [userName, setUserName] = useState('');
   const [batch, setBatch] = useState('');
@@ -37,21 +39,29 @@ export default function NITCustomizer({ onAddToCart }: Props) {
     <div className="customizer-layout">
       <div className="preview-col">
         <div className="preview-container">
+          <div className="view-mode-toggle" role="group" aria-label="Preview mode">
+            <button className={mode === '3d' ? 'active' : ''} onClick={() => setMode('3d')}>3D</button>
+            <button className={mode === '2d' ? 'active' : ''} onClick={() => setMode('2d')}>2D</button>
+          </div>
           <button className="preview-toggle" onClick={() => setView(view === 'front' ? 'back' : 'front')}>
             Switch to {view === 'front' ? 'Back' : 'Front'}
           </button>
           
-          <div className="preview-text" style={{ fontSize: view === 'front' ? '3rem' : '2rem' }}>
-            {view === 'front' ? (
-              <div style={{ color: 'var(--text)' }}>nit.</div>
-            ) : (
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-                <div style={{ fontSize: '1.5rem', textTransform: 'uppercase', letterSpacing: '0.05em' }}>{nitName}</div>
-                <div style={{ fontSize: '2.5rem' }}>{userName || 'YOUR NAME'}</div>
-                {batch && <div style={{ fontSize: '1.25rem', color: 'var(--tm)' }}>Class of {batch}</div>}
-              </div>
-            )}
-          </div>
+          {mode === '3d' ? (
+            <LazyMerch3D product="nit" view={view} userName={userName} nitName={nitName} batch={batch} />
+          ) : (
+            <div className="preview-text" style={{ fontSize: view === 'front' ? '3rem' : '2rem' }}>
+              {view === 'front' ? (
+                <div style={{ color: 'var(--text)' }}>nit.</div>
+              ) : (
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                  <div style={{ fontSize: '1.5rem', textTransform: 'uppercase', letterSpacing: '0.05em' }}>{nitName}</div>
+                  <div style={{ fontSize: '2.5rem' }}>{userName || 'YOUR NAME'}</div>
+                  {batch && <div style={{ fontSize: '1.25rem', color: 'var(--tm)' }}>Class of {batch}</div>}
+                </div>
+              )}
+            </div>
+          )}
         </div>
       </div>
 
