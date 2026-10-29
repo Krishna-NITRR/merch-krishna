@@ -46,6 +46,19 @@ export default function HomeView({ onNavigate }: Props) {
       </section>
 
       <section id="products" className="products-grid">
+        <div className="product-card" onClick={() => onNavigate('customize-research-mode')}>
+          <div className="product-image-placeholder">
+            <span className="product-badge">New</span>
+            <LazyMerch3D product="researchmode" interactive={false} autoRotate />
+          </div>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginTop: '16px', marginBottom: '8px' }}>
+            <h2 className="product-title" style={{ margin: 0 }}>Research Mode Long Sleeve</h2>
+            <span style={{ fontSize: '1.25rem', fontWeight: 700, color: '#a085ff' }}>₹699</span>
+          </div>
+          <p className="product-desc">Your NIT, batch and name on the front. RESEARCH MODE on the back.</p>
+          <button className="btn btn-secondary btn-full">Customize Long Sleeve &rarr;</button>
+        </div>
+
         <div className="product-card" onClick={() => onNavigate('customize-nit')}>
           <div className="product-image-placeholder">
             <LazyMerch3D product="nit" interactive={false} autoRotate />
@@ -80,19 +93,6 @@ export default function HomeView({ onNavigate }: Props) {
           </div>
           <p className="product-desc">THINK RESEARCH PUBLISH and your name on the front. THINK LIKE A RESEARCHER on the back.</p>
           <button className="btn btn-primary btn-full">Buy Hoodie &rarr;</button>
-        </div>
-
-        <div className="product-card" onClick={() => onNavigate('customize-research-mode')}>
-          <div className="product-image-placeholder">
-            <span className="product-badge">New</span>
-            <LazyMerch3D product="researchmode" interactive={false} autoRotate />
-          </div>
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginTop: '16px', marginBottom: '8px' }}>
-            <h2 className="product-title" style={{ margin: 0 }}>Research Mode Long Sleeve</h2>
-            <span style={{ fontSize: '1.25rem', fontWeight: 700, color: '#a085ff' }}>₹699</span>
-          </div>
-          <p className="product-desc">Your NIT, batch and name on the front. RESEARCH MODE on the back.</p>
-          <button className="btn btn-secondary btn-full">Customize Long Sleeve &rarr;</button>
         </div>
       </section>
     </>
