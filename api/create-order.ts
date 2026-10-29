@@ -3,8 +3,8 @@ import Razorpay from 'razorpay';
 import { createClient } from '@supabase/supabase-js';
 
 const PRODUCT_PRICES: Record<string, number> = {
-  nit: 499,        // ₹499
-  research: 699,   // ₹699
+  nit: 699,        // ₹699 NIT long sleeve
+  research: 899,   // ₹899 Research Publish hoodie
   researchmode: 699, // ₹699 Research Mode long sleeve
 };
 

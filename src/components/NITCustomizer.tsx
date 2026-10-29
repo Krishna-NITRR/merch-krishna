@@ -21,7 +21,7 @@ export default function NITCustomizer({ onAddToCart }: Props) {
       id: Date.now().toString(),
       type: 'nit',
       title: 'NIT Identity Long Sleeve',
-      price: 499,
+      price: 699,
       size,
       quantity: 1,
       details: { nitName, userName, batch }
@@ -55,7 +55,7 @@ export default function NITCustomizer({ onAddToCart }: Props) {
             <p style={{ color: 'var(--tm)', fontSize: '0.9rem', margin: '4px 0 0' }}>Full-sleeve tee · Premium cotton · Ribbed cuffs</p>
           </div>
           <div style={{ textAlign: 'right' }}>
-            <div style={{ fontSize: '1.6rem', fontWeight: 800, color: '#a085ff' }}>₹499</div>
+            <div style={{ fontSize: '1.6rem', fontWeight: 800, color: '#a085ff' }}>₹699</div>
             <div style={{ fontSize: '0.75rem', color: '#4ade80', fontWeight: 600 }}>Free India Shipping</div>
           </div>
         </div>
@@ -123,7 +123,7 @@ export default function NITCustomizer({ onAddToCart }: Props) {
         </div>
 
         <button className="btn btn-primary btn-full mt-2" onClick={handleAdd}>
-          Add to Cart · ₹499
+          Add to Cart · ₹699
         </button>
       </div>
     </div>

@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import type { CartItem } from '../App';
-import TShirtMockup from './TShirtMockup';
+import ResearchHoodieMockup from './ResearchHoodieMockup';
 import LazyMerch3D from './LazyMerch3D';
 
 interface Props {
@@ -19,8 +19,8 @@ export default function ResearchCustomizer({ onAddToCart }: Props) {
     onAddToCart({
       id: Date.now().toString(),
       type: 'research',
-      title: 'Research Publish T-Shirt',
-      price: 699,
+      title: 'Research Publish Hoodie',
+      price: 899,
       size,
       quantity: 1,
       details: { userName }
@@ -42,9 +42,7 @@ export default function ResearchCustomizer({ onAddToCart }: Props) {
           {mode === '3d' ? (
             <LazyMerch3D product="research" view={view} userName={userName} />
           ) : (
-            <div className="preview-text" style={{ padding: 0, background: 'transparent' }}>
-              <TShirtMockup view={view} userName={userName} />
-            </div>
+            <ResearchHoodieMockup view={view} userName={userName} />
           )}
         </div>
       </div>
@@ -52,13 +50,13 @@ export default function ResearchCustomizer({ onAddToCart }: Props) {
       <div className="form-col">
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '16px' }}>
           <div>
-            <h2 style={{ margin: 0, fontSize: '1.6rem' }}>Research Publish Merch</h2>
+            <h2 style={{ margin: 0, fontSize: '1.6rem' }}>Research Publish Hoodie</h2>
             <p style={{ color: 'var(--tm)', fontSize: '0.9rem', margin: '4px 0 0' }}>
-              Standard fit · 220 GSM 100% Super-combed cotton
+              Heavyweight fleece · Kangaroo pocket · Ribbed cuffs
             </p>
           </div>
           <div style={{ textAlign: 'right' }}>
-            <div style={{ fontSize: '1.6rem', fontWeight: 800, color: '#a085ff' }}>₹699</div>
+            <div style={{ fontSize: '1.6rem', fontWeight: 800, color: '#a085ff' }}>₹899</div>
             <div style={{ fontSize: '0.75rem', color: '#4ade80', fontWeight: 600 }}>Free India Shipping</div>
           </div>
         </div>
@@ -107,7 +105,7 @@ export default function ResearchCustomizer({ onAddToCart }: Props) {
         </div>
 
         <button className="btn btn-primary btn-full mt-2" onClick={handleAdd}>
-          Add to Cart · ₹699
+          Add to Cart · ₹899
         </button>
       </div>
     </div>

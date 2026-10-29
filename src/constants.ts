@@ -15,3 +15,5 @@ export const RESEARCH_MODE_BACK = { src: '/merch/research-mode-back.png', ratio:
 // Font size (cqw) that keeps text within maxWidth cqw, capped at max
 export const fitSize = (text: string, max: number, maxWidth: number) =>
   Math.min(max, maxWidth / (0.85 * Math.max(text.length, 1)));
+export const RESEARCH_HOODIE_FRONT = { src: '/merch/research-hoodie-front.png', ratio: 248 / 354 };
+export const RESEARCH_HOODIE_BACK = { src: '/merch/research-hoodie-back.png', ratio: 271 / 361 };

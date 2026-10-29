@@ -26,8 +26,8 @@ interface PrintData {
 const GARMENTS = {
   research: {
     color: '#1b1b22',
-    torso: { a: 0.85, b: 0.42, h: 2.2 },
-    sleeve: { length: 0.75, rTop: 0.3, rBottom: 0.25, angle: 50, shoulderX: 0.74 },
+    torso: { a: 0.9, b: 0.45, h: 2.3 },
+    sleeve: { length: 1.65, rTop: 0.31, rBottom: 0.21, angle: 20, shoulderX: 0.8 },
   },
   nit: {
     color: '#1b1b22',
@@ -43,7 +43,7 @@ const GARMENTS = {
 
 const PRODUCT_LABELS: Record<MerchProduct, string> = {
   nit: 'NIT long-sleeve tee',
-  research: 'Research T-shirt',
+  research: 'Research Publish hoodie',
   researchmode: 'Research Mode long-sleeve tee',
 };
 
@@ -114,26 +114,45 @@ function drawPrints(canvas: HTMLCanvasElement, product: MerchProduct, data: Prin
 
   if (product === 'research') {
     panel(front, () => {
-      line('THINK', 250, 74);
-      line('RESEARCH', 330, 74, '#e53935');
-      line('PUBLISH', 410, 74);
-      line(data.userName || '{YOUR NAME}', 520, 40);
+      line('THINK', 330, 62);
+      line('RESEARCH', 400, 78, '#e53935');
+      line('PUBLISH', 470, 62);
+      fitFont(ctx, data.userName || 'NAME', 800, 34, 380);
+      ctx.fillStyle = '#fff';
+      ctx.fillText(data.userName || 'NAME', 0, 580);
+      // Kangaroo pocket
+      ctx.fillStyle = 'rgba(0,0,0,0.22)';
+      ctx.strokeStyle = 'rgba(255,255,255,0.1)';
+      ctx.lineWidth = 3;
+      ctx.setLineDash([9, 7]);
+      ctx.beginPath();
+      ctx.moveTo(-230, 900);
+      ctx.lineTo(-170, 670);
+      ctx.lineTo(170, 670);
+      ctx.lineTo(230, 900);
+      ctx.closePath();
+      ctx.fill();
+      ctx.stroke();
+      ctx.setLineDash([]);
     });
     panel(back, () => {
-      line('THINK', 230, 80);
-      line('LIKE A', 315, 80);
-      line('RESEARCHER', 400, 80);
-      line('Evidence over assumptions.', 520, 32, '#fff', 500);
-      line('krishnamahawar.in', 565, 24, 'rgba(255,255,255,0.7)', 500);
+      line('THINK LIKE A', 330, 40);
+      line('RESEARCHER', 395, 84);
+      line('Evidence over', 690, 40, '#fff', 500);
+      line('Assumptions', 745, 40, '#fff', 500);
+      line('krishnamahawar.in', 790, 18, 'rgba(255,255,255,0.7)', 600);
     });
-    // Hem stitch
-    ctx.strokeStyle = 'rgba(255,255,255,0.08)';
-    ctx.setLineDash([10, 8]);
-    ctx.beginPath();
-    ctx.moveTo(0, TEX_H - 30);
-    ctx.lineTo(TEX_W, TEX_H - 30);
-    ctx.stroke();
-    ctx.setLineDash([]);
+    // Ribbed waistband
+    ctx.fillStyle = 'rgba(0,0,0,0.25)';
+    ctx.fillRect(0, TEX_H - 80, TEX_W, 80);
+    ctx.strokeStyle = 'rgba(255,255,255,0.05)';
+    ctx.lineWidth = 2;
+    for (let x = 0; x < TEX_W; x += 10) {
+      ctx.beginPath();
+      ctx.moveTo(x, TEX_H - 80);
+      ctx.lineTo(x, TEX_H);
+      ctx.stroke();
+    }
   } else if (product === 'researchmode') {
     panel(front, () => {
       // Left-chest style placement: NIT name with the batch tucked under its right edge
@@ -224,7 +243,7 @@ function buildGarment(product: MerchProduct, texture: THREE.Texture) {
 
   // Collar + neck opening
   const neckY = h / 2 + domeH - 0.04;
-  const collar = new THREE.Mesh(new THREE.TorusGeometry(0.28, 0.035, 16, 48), fabric);
+  const collar = new THREE.Mesh(new THREE.TorusGeometry(0.28, product === 'research' ? 0.07 : 0.035, 16, 48), fabric);
   collar.rotation.x = Math.PI / 2;
   collar.scale.set(1.05, 0.6, 1);
   collar.position.y = neckY;
@@ -260,17 +279,40 @@ function buildGarment(product: MerchProduct, texture: THREE.Texture) {
     arm.position.y = -s.length / 2;
     sleeve.add(arm);
 
-    if (product !== 'research') {
-      const cuff = new THREE.Mesh(new THREE.CylinderGeometry(s.rBottom * 1.02, s.rBottom * 0.98, 0.16, 32, 1, true), fabric);
-      cuff.position.y = -s.length - 0.08;
-      sleeve.add(cuff);
-    }
+    // Every garment is full-sleeve now, so all get ribbed cuffs
+    const cuff = new THREE.Mesh(new THREE.CylinderGeometry(s.rBottom * 1.02, s.rBottom * 0.98, 0.16, 32, 1, true), fabric);
+    cuff.position.y = -s.length - 0.08;
+    sleeve.add(cuff);
     const end = new THREE.Mesh(new THREE.CircleGeometry(s.rBottom * 0.97, 32), dark);
     end.rotation.x = Math.PI / 2;
-    end.position.y = -s.length - (product !== 'research' ? 0.15 : 0);
+    end.position.y = -s.length - 0.15;
     sleeve.add(end);
 
     group.add(sleeve);
+  }
+
+  if (product === 'research') {
+    // Hood resting behind the neck
+    const hood = new THREE.Mesh(new THREE.SphereGeometry(1, 48, 32), fabric);
+    hood.scale.set(0.5, 0.46, 0.4);
+    hood.position.set(0, neckY + 0.12, -0.24);
+    group.add(hood);
+
+    // Drawstrings with aglets
+    const stringMat = new THREE.MeshStandardMaterial({ color: '#2a2a33', roughness: 0.7 });
+    const frontZ = (x: number) => b * Math.sqrt(1 - (x / a) ** 2) + 0.012;
+    for (const x of [-0.13, 0.13]) {
+      const curve = new THREE.CatmullRomCurve3([
+        new THREE.Vector3(x, neckY, 0.17),
+        new THREE.Vector3(x, h / 2 + 0.1, 0.36),
+        new THREE.Vector3(x, h / 2 - 0.15, frontZ(x)),
+        new THREE.Vector3(x * 1.1, h / 2 - 0.5, frontZ(x)),
+      ]);
+      group.add(new THREE.Mesh(new THREE.TubeGeometry(curve, 32, 0.016, 8), stringMat));
+      const tip = new THREE.Mesh(new THREE.CylinderGeometry(0.022, 0.022, 0.09, 12), stringMat);
+      tip.position.set(x * 1.1, h / 2 - 0.54, frontZ(x));
+      group.add(tip);
+    }
   }
 
   // Soft contact shadow

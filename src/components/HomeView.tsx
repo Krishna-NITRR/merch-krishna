@@ -52,7 +52,7 @@ export default function HomeView({ onNavigate }: Props) {
           </div>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginTop: '16px', marginBottom: '8px' }}>
             <h2 className="product-title" style={{ margin: 0 }}>NIT Identity Merch</h2>
-            <span style={{ fontSize: '1.25rem', fontWeight: 700, color: '#a085ff' }}>₹499</span>
+            <span style={{ fontSize: '1.25rem', fontWeight: 700, color: '#a085ff' }}>₹699</span>
           </div>
           <p className="product-desc">Customizable long-sleeve tee featuring your NIT, your name, and your batch year.</p>
           <button className="btn btn-secondary btn-full">Customize Long Sleeve &rarr;</button>
@@ -63,11 +63,11 @@ export default function HomeView({ onNavigate }: Props) {
             <LazyMerch3D product="research" interactive={false} autoRotate />
           </div>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginTop: '16px', marginBottom: '8px' }}>
-            <h2 className="product-title" style={{ margin: 0 }}>Research Publish Merch</h2>
-            <span style={{ fontSize: '1.25rem', fontWeight: 700, color: '#a085ff' }}>₹699</span>
+            <h2 className="product-title" style={{ margin: 0 }}>Research Publish Hoodie</h2>
+            <span style={{ fontSize: '1.25rem', fontWeight: 700, color: '#a085ff' }}>₹899</span>
           </div>
-          <p className="product-desc">"Evidence over assumptions" on the back. THINK RESEARCH PUBLISH on the front.</p>
-          <button className="btn btn-primary btn-full">Buy T-Shirt &rarr;</button>
+          <p className="product-desc">THINK RESEARCH PUBLISH and your name on the front. THINK LIKE A RESEARCHER on the back.</p>
+          <button className="btn btn-primary btn-full">Buy Hoodie &rarr;</button>
         </div>
 
         <div className="product-card" onClick={() => onNavigate('customize-research-mode')}>
