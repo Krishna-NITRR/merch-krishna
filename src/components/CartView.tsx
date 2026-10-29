@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import type { CartItem, ViewState } from '../App';
+import { validateReferral, type Referral } from '../referral';
 import { Trash2, Plus, Minus, ShieldCheck, Truck, CheckCircle2, ArrowRight } from 'lucide-react';
 
 declare global {
@@ -14,6 +15,8 @@ interface Props {
   onUpdateQuantity: (id: string, delta: number) => void;
   onRemoveItem: (id: string) => void;
   onClearCart: () => void;
+  // Code from a promo link, already validated
+  initialReferral?: Referral | null;
 }
 
 interface CustomerDetails {
@@ -36,7 +39,7 @@ interface ConfirmedOrder {
 
 const REFERRAL_DISCOUNT = 0.10;
 
-export default function CartView({ cart, onNavigate, onUpdateQuantity, onRemoveItem, onClearCart }: Props) {
+export default function CartView({ cart, onNavigate, onUpdateQuantity, onRemoveItem, onClearCart, initialReferral }: Props) {
   const [customer, setCustomer] = useState<CustomerDetails>({
     name: '',
     email: '',
@@ -52,9 +55,9 @@ export default function CartView({ cart, onNavigate, onUpdateQuantity, onRemoveI
   const [confirmedOrder, setConfirmedOrder] = useState<ConfirmedOrder | null>(null);
 
   // Referral code state
-  const [refCode, setRefCode] = useState('');
-  const [refStatus, setRefStatus] = useState<'idle' | 'checking' | 'valid' | 'invalid'>('idle');
-  const [refReferrer, setRefReferrer] = useState<string | null>(null);
+  const [refCode, setRefCode] = useState(initialReferral?.code ?? '');
+  const [refStatus, setRefStatus] = useState<'idle' | 'checking' | 'valid' | 'invalid'>(initialReferral ? 'valid' : 'idle');
+  const [refReferrer, setRefReferrer] = useState<string | null>(initialReferral?.referrer ?? null);
 
   const subtotal = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
   const discount = refStatus === 'valid' ? Math.round(subtotal * REFERRAL_DISCOUNT) : 0;
@@ -65,18 +68,9 @@ export default function CartView({ cart, onNavigate, onUpdateQuantity, onRemoveI
     if (!code) return;
     setRefStatus('checking');
     setRefReferrer(null);
-    try {
-      const res = await fetch(`/api/referral-validate?code=${encodeURIComponent(code)}`);
-      const data = await res.json();
-      if (data.success && data.data?.valid) {
-        setRefStatus('valid');
-        setRefReferrer(data.data.referrer?.name || null);
-      } else {
-        setRefStatus('invalid');
-      }
-    } catch {
-      setRefStatus('invalid');
-    }
+    const result = await validateReferral(code);
+    setRefStatus(result ? 'valid' : 'invalid');
+    setRefReferrer(result?.referrer ?? null);
   };
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {

@@ -29,8 +29,8 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       });
     }
 
-    // Only alphanumeric codes
-    if (!/^[A-Z0-9]+$/.test(code)) {
+    // Letters, digits and hyphens (e.g. RESEARCH-IMPACT)
+    if (!/^[A-Z0-9-]+$/.test(code)) {
       return res.status(400).json({
         success: false,
         error: { code: 'INVALID_INPUT', message: 'Referral code contains invalid characters.' }

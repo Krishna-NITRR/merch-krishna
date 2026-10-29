@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { ShoppingBag, ArrowLeft } from 'lucide-react';
 import HomeView from './components/HomeView';
 import NITCustomizer from './components/NITCustomizer';
@@ -6,6 +6,7 @@ import ResearchCustomizer from './components/ResearchCustomizer';
 import ResearchHoodieCustomizer from './components/ResearchHoodieCustomizer';
 import ResearchModeCustomizer from './components/ResearchModeCustomizer';
 import CartView from './components/CartView';
+import { readPromoLink, validateReferral, type Referral } from './referral';
 
 export type ViewState = 'home' | 'customize-nit' | 'customize-research' | 'customize-research-hoodie' | 'customize-research-mode' | 'cart';
 
@@ -24,8 +25,14 @@ export interface CartItem {
 }
 
 function App() {
-  const [activeView, setActiveView] = useState<ViewState>('home');
+  const [promoLink] = useState(readPromoLink);
+  const [activeView, setActiveView] = useState<ViewState>(promoLink.view ?? 'home');
   const [cart, setCart] = useState<CartItem[]>([]);
+  const [promo, setPromo] = useState<Referral | null>(null);
+
+  useEffect(() => {
+    if (promoLink.code) validateReferral(promoLink.code).then(setPromo);
+  }, [promoLink.code]);
 
   const addToCart = (item: CartItem) => {
     setCart(prev => {
@@ -86,6 +93,12 @@ function App() {
         </div>
       </header>
 
+      {promo && (
+        <div className="promo-banner" role="status">
+          🎟 Code <strong>{promo.code}</strong> applied: 10% off at checkout
+        </div>
+      )}
+
       <main className="container pt-12 mb-8">
         {activeView === 'home' && <HomeView onNavigate={setActiveView} />}
         {activeView === 'customize-nit' && <NITCustomizer onAddToCart={addToCart} />}
@@ -99,6 +112,7 @@ function App() {
             onUpdateQuantity={updateQuantity}
             onRemoveItem={removeFromCart}
             onClearCart={clearCart}
+            initialReferral={promo}
           />
         )}
       </main>
