@@ -63,6 +63,18 @@ export default function HomeView({ onNavigate }: Props) {
             <LazyMerch3D product="research" interactive={false} autoRotate />
           </div>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginTop: '16px', marginBottom: '8px' }}>
+            <h2 className="product-title" style={{ margin: 0 }}>Research Publish T-Shirt</h2>
+            <span style={{ fontSize: '1.25rem', fontWeight: 700, color: '#a085ff' }}>₹699</span>
+          </div>
+          <p className="product-desc">"Evidence over assumptions" on the back. THINK RESEARCH PUBLISH on the front.</p>
+          <button className="btn btn-primary btn-full">Buy T-Shirt &rarr;</button>
+        </div>
+
+        <div className="product-card" onClick={() => onNavigate('customize-research-hoodie')}>
+          <div className="product-image-placeholder">
+            <LazyMerch3D product="researchhoodie" interactive={false} autoRotate />
+          </div>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginTop: '16px', marginBottom: '8px' }}>
             <h2 className="product-title" style={{ margin: 0 }}>Research Publish Hoodie</h2>
             <span style={{ fontSize: '1.25rem', fontWeight: 700, color: '#a085ff' }}>₹899</span>
           </div>

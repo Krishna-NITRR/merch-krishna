@@ -4,7 +4,8 @@ import { createClient } from '@supabase/supabase-js';
 
 const PRODUCT_PRICES: Record<string, number> = {
   nit: 699,        // ₹699 NIT long sleeve
-  research: 899,   // ₹899 Research Publish hoodie
+  research: 699,   // ₹699 Research Publish T-shirt
+  researchhoodie: 899, // ₹899 Research Publish hoodie
   researchmode: 699, // ₹699 Research Mode long sleeve
 };
 

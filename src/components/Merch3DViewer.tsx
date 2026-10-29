@@ -2,7 +2,7 @@ import { useEffect, useRef } from 'react';
 import * as THREE from 'three';
 import './Merch3DViewer.css';
 
-export type MerchProduct = 'nit' | 'research' | 'researchmode';
+export type MerchProduct = 'nit' | 'research' | 'researchhoodie' | 'researchmode';
 
 interface Props {
   product: MerchProduct;
@@ -26,6 +26,11 @@ interface PrintData {
 const GARMENTS = {
   research: {
     color: '#1b1b22',
+    torso: { a: 0.85, b: 0.42, h: 2.2 },
+    sleeve: { length: 0.75, rTop: 0.3, rBottom: 0.25, angle: 50, shoulderX: 0.74 },
+  },
+  researchhoodie: {
+    color: '#1b1b22',
     torso: { a: 0.9, b: 0.45, h: 2.3 },
     sleeve: { length: 1.65, rTop: 0.31, rBottom: 0.21, angle: 20, shoulderX: 0.8 },
   },
@@ -43,7 +48,8 @@ const GARMENTS = {
 
 const PRODUCT_LABELS: Record<MerchProduct, string> = {
   nit: 'NIT long-sleeve tee',
-  research: 'Research Publish hoodie',
+  research: 'Research Publish T-shirt',
+  researchhoodie: 'Research Publish hoodie',
   researchmode: 'Research Mode long-sleeve tee',
 };
 
@@ -57,6 +63,22 @@ function sparkle(ctx: CanvasRenderingContext2D, x: number, y: number, r: number,
   ctx.quadraticCurveTo(x, y, x - r, y);
   ctx.quadraticCurveTo(x, y, x, y - r);
   ctx.fill();
+}
+
+// Artwork lifted from the product photo so the 3D back matches it exactly
+const RESEARCH_MODE_ART = '/merch/research-mode-print.png';
+const artCache = new Map<string, HTMLImageElement>();
+
+function loadArt(src: string) {
+  return new Promise<HTMLImageElement>((resolve, reject) => {
+    const img = new Image();
+    img.onload = () => {
+      artCache.set(src, img);
+      resolve(img);
+    };
+    img.onerror = reject;
+    img.src = src;
+  });
 }
 
 const TEX_W = 2048;
@@ -114,6 +136,28 @@ function drawPrints(canvas: HTMLCanvasElement, product: MerchProduct, data: Prin
 
   if (product === 'research') {
     panel(front, () => {
+      line('THINK', 250, 74);
+      line('RESEARCH', 330, 74, '#e53935');
+      line('PUBLISH', 410, 74);
+      line(data.userName || '{YOUR NAME}', 520, 40);
+    });
+    panel(back, () => {
+      line('THINK', 230, 80);
+      line('LIKE A', 315, 80);
+      line('RESEARCHER', 400, 80);
+      line('Evidence over assumptions.', 520, 32, '#fff', 500);
+      line('krishnamahawar.in', 565, 24, 'rgba(255,255,255,0.7)', 500);
+    });
+    // Hem stitch
+    ctx.strokeStyle = 'rgba(255,255,255,0.08)';
+    ctx.setLineDash([10, 8]);
+    ctx.beginPath();
+    ctx.moveTo(0, TEX_H - 30);
+    ctx.lineTo(TEX_W, TEX_H - 30);
+    ctx.stroke();
+    ctx.setLineDash([]);
+  } else if (product === 'researchhoodie') {
+    panel(front, () => {
       line('THINK', 330, 62);
       line('RESEARCH', 400, 78, '#e53935');
       line('PUBLISH', 470, 62);
@@ -169,7 +213,12 @@ function drawPrints(canvas: HTMLCanvasElement, product: MerchProduct, data: Prin
       ctx.fillText(data.userName || '{YOUR NAME}', -10, 820);
     });
     panel(back, () => {
-      // Tall condensed "RESEARCH" over a bold purple "MODE"
+      const art = artCache.get(RESEARCH_MODE_ART);
+      if (art) {
+        ctx.drawImage(art, -210, 200, 420, 420);
+        return;
+      }
+      // Fallback until the artwork loads: tall condensed "RESEARCH" over a bold purple "MODE"
       ctx.save();
       // Squash horizontally, stretch vertically for tall condensed letters
       ctx.scale(0.46, 2.85);
@@ -243,7 +292,7 @@ function buildGarment(product: MerchProduct, texture: THREE.Texture) {
 
   // Collar + neck opening
   const neckY = h / 2 + domeH - 0.04;
-  const collar = new THREE.Mesh(new THREE.TorusGeometry(0.28, product === 'research' ? 0.07 : 0.035, 16, 48), fabric);
+  const collar = new THREE.Mesh(new THREE.TorusGeometry(0.28, product === 'researchhoodie' ? 0.07 : 0.035, 16, 48), fabric);
   collar.rotation.x = Math.PI / 2;
   collar.scale.set(1.05, 0.6, 1);
   collar.position.y = neckY;
@@ -279,19 +328,22 @@ function buildGarment(product: MerchProduct, texture: THREE.Texture) {
     arm.position.y = -s.length / 2;
     sleeve.add(arm);
 
-    // Every garment is full-sleeve now, so all get ribbed cuffs
-    const cuff = new THREE.Mesh(new THREE.CylinderGeometry(s.rBottom * 1.02, s.rBottom * 0.98, 0.16, 32, 1, true), fabric);
-    cuff.position.y = -s.length - 0.08;
-    sleeve.add(cuff);
+    // Full-sleeve garments get ribbed cuffs; the short-sleeve tee ends open
+    const cuffed = product !== 'research';
+    if (cuffed) {
+      const cuff = new THREE.Mesh(new THREE.CylinderGeometry(s.rBottom * 1.02, s.rBottom * 0.98, 0.16, 32, 1, true), fabric);
+      cuff.position.y = -s.length - 0.08;
+      sleeve.add(cuff);
+    }
     const end = new THREE.Mesh(new THREE.CircleGeometry(s.rBottom * 0.97, 32), dark);
     end.rotation.x = Math.PI / 2;
-    end.position.y = -s.length - 0.15;
+    end.position.y = -s.length - (cuffed ? 0.15 : 0);
     sleeve.add(end);
 
     group.add(sleeve);
   }
 
-  if (product === 'research') {
+  if (product === 'researchhoodie') {
     // Hood resting behind the neck
     const hood = new THREE.Mesh(new THREE.SphereGeometry(1, 48, 32), fabric);
     hood.scale.set(0.5, 0.46, 0.4);
@@ -394,6 +446,13 @@ export default function Merch3DViewer({
       drawPrints(printCanvas, product, printRef.current);
       texture.needsUpdate = true;
     });
+    if (product === 'researchmode' && !artCache.has(RESEARCH_MODE_ART)) {
+      loadArt(RESEARCH_MODE_ART).then(() => {
+        if (disposed) return;
+        drawPrints(printCanvas, product, printRef.current);
+        texture.needsUpdate = true;
+      }).catch(() => { /* keep the drawn fallback */ });
+    }
 
     const { group, shadow } = buildGarment(product, texture);
     scene.add(group, shadow);
