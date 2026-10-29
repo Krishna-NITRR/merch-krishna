@@ -1,19 +1,12 @@
 import { useState } from 'react';
 import type { CartItem } from '../App';
 import LazyMerch3D from './LazyMerch3D';
+import NITMockup from './NITMockup';
+import { NIT_OPTIONS, SIZES } from '../constants';
 
 interface Props {
   onAddToCart: (item: CartItem) => void;
 }
-
-const NIT_OPTIONS = [
-  "NIT Trichy", "NIT Surathkal", "NIT Warangal", "NIT Calicut", "NIT Rourkela",
-  "MNIT Jaipur", "VNIT Nagpur", "NIT Kurukshetra", "SVNIT Surat", "NIT Durgapur",
-  "MNNIT Allahabad", "NIT Silchar", "NIT Raipur", "NIT Meghalaya", "NIT Bhopal",
-  "NIT Jalandhar", "NIT Jamshedpur", "NIT Patna", "NIT Goa", "NIT Hamirpur"
-];
-
-const SIZES = ['S', 'M', 'L', 'XL', 'XXL'];
 
 export default function NITCustomizer({ onAddToCart }: Props) {
   const [view, setView] = useState<'front' | 'back'>('front');
@@ -27,7 +20,7 @@ export default function NITCustomizer({ onAddToCart }: Props) {
     onAddToCart({
       id: Date.now().toString(),
       type: 'nit',
-      title: 'NIT Identity Hoodie',
+      title: 'NIT Identity Long Sleeve',
       price: 499,
       size,
       quantity: 1,
@@ -50,17 +43,7 @@ export default function NITCustomizer({ onAddToCart }: Props) {
           {mode === '3d' ? (
             <LazyMerch3D product="nit" view={view} userName={userName} nitName={nitName} batch={batch} />
           ) : (
-            <div className="preview-text" style={{ fontSize: view === 'front' ? '3rem' : '2rem' }}>
-              {view === 'front' ? (
-                <div style={{ color: 'var(--text)' }}>nit.</div>
-              ) : (
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-                  <div style={{ fontSize: '1.5rem', textTransform: 'uppercase', letterSpacing: '0.05em' }}>{nitName}</div>
-                  <div style={{ fontSize: '2.5rem' }}>{userName || 'YOUR NAME'}</div>
-                  {batch && <div style={{ fontSize: '1.25rem', color: 'var(--tm)' }}>Class of {batch}</div>}
-                </div>
-              )}
-            </div>
+            <NITMockup view={view} nitName={nitName} userName={userName} batch={batch} />
           )}
         </div>
       </div>
@@ -68,8 +51,8 @@ export default function NITCustomizer({ onAddToCart }: Props) {
       <div className="form-col">
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '24px' }}>
           <div>
-            <h2 style={{ margin: 0, fontSize: '1.6rem' }}>Customize Your NIT Hoodie</h2>
-            <p style={{ color: 'var(--tm)', fontSize: '0.9rem', margin: '4px 0 0' }}>Heavyweight 380 GSM fleece · Premium embroidery</p>
+            <h2 style={{ margin: 0, fontSize: '1.6rem' }}>Customize Your NIT Long Sleeve</h2>
+            <p style={{ color: 'var(--tm)', fontSize: '0.9rem', margin: '4px 0 0' }}>Full-sleeve tee · Premium cotton · Ribbed cuffs</p>
           </div>
           <div style={{ textAlign: 'right' }}>
             <div style={{ fontSize: '1.6rem', fontWeight: 800, color: '#a085ff' }}>₹499</div>

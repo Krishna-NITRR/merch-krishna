@@ -3,13 +3,14 @@ import { ShoppingBag, ArrowLeft } from 'lucide-react';
 import HomeView from './components/HomeView';
 import NITCustomizer from './components/NITCustomizer';
 import ResearchCustomizer from './components/ResearchCustomizer';
+import ResearchModeCustomizer from './components/ResearchModeCustomizer';
 import CartView from './components/CartView';
 
-export type ViewState = 'home' | 'customize-nit' | 'customize-research' | 'cart';
+export type ViewState = 'home' | 'customize-nit' | 'customize-research' | 'customize-research-mode' | 'cart';
 
 export interface CartItem {
   id: string;
-  type: 'nit' | 'research';
+  type: 'nit' | 'research' | 'researchmode';
   title: string;
   price: number;
   size: string;
@@ -88,6 +89,7 @@ function App() {
         {activeView === 'home' && <HomeView onNavigate={setActiveView} />}
         {activeView === 'customize-nit' && <NITCustomizer onAddToCart={addToCart} />}
         {activeView === 'customize-research' && <ResearchCustomizer onAddToCart={addToCart} />}
+        {activeView === 'customize-research-mode' && <ResearchModeCustomizer onAddToCart={addToCart} />}
         {activeView === 'cart' && (
           <CartView 
             cart={cart} 

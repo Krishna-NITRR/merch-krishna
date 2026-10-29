@@ -5,6 +5,7 @@ import { createClient } from '@supabase/supabase-js';
 const PRODUCT_PRICES: Record<string, number> = {
   nit: 499,        // ₹499
   research: 699,   // ₹699
+  researchmode: 699, // ₹699 Research Mode long sleeve
 };
 
 const REFERRAL_DISCOUNT = 0.10; // 10% off with valid code

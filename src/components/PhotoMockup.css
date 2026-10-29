@@ -1,0 +1,42 @@
+.photo-mockup {
+  position: relative;
+  height: 92%;
+  max-width: 92%;
+  container-type: inline-size;
+}
+
+.photo-mockup img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  filter: drop-shadow(0 14px 28px rgba(0, 0, 0, 0.55));
+  user-select: none;
+}
+
+.photo-print {
+  position: absolute;
+  white-space: nowrap;
+  font-family: 'Montserrat', 'Inter', Arial, sans-serif;
+  letter-spacing: 0.02em;
+  line-height: 1;
+  pointer-events: none;
+}
+
+.photo-print-stack {
+  position: absolute;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+}
+
+.photo-print-stack .photo-print {
+  position: static;
+  display: block;
+}
+
+.photo-print-stack .photo-print-sub {
+  position: absolute;
+  right: 0;
+  top: 100%;
+  margin-top: 0.6cqw;
+}
